@@ -1,12 +1,13 @@
-import { Configuration, OpenAIApi } from 'openai';
-import { NextResponse } from 'next/server';
+import { Configuration, ChatCompletionRequestMessage, OpenAIApi } from 'openai';
+import { NextResponse, NextRequest } from 'next/server';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
     return new Response('Hello, Next.js GET!');
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
+        const json: ChatCompletionRequestMessage[] = await req.json();
         const openai = new OpenAIApi(
             new Configuration({
                 apiKey: process.env.OPENAI_API_KEY,
@@ -15,17 +16,17 @@ export async function POST(req: Request) {
 
         const completion = await openai.createChatCompletion({
             model: 'gpt-3.5-turbo',
-            messages: [
-                {
-                    content: 'Hello',
-                    role: 'user',
-                },
-            ],
+            messages: json,
+            max_tokens: process.env.MAX_TOKENS
+                ? parseInt(process.env.MAX_TOKENS, 10)
+                : 500,
         });
 
-        const { data } = completion;
+        const {
+            data: { choices, id },
+        } = completion;
 
-        return new NextResponse(JSON.stringify(data), {
+        return new NextResponse(JSON.stringify({ choices, id }), {
             status: 200,
         });
     } catch (error) {

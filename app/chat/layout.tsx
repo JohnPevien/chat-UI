@@ -15,14 +15,10 @@ export default function RootLayout({
             <body>
                 <aside
                     id="default-sidebar"
-                    className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+                    className="fixed top-0 left-0 z-40 h-screen w-64 -translate-x-full overflow-y-auto transition-transform sm:translate-x-0"
                     aria-label="Sidebar"
                 >
-                    <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-                        <h1 className="mb-6 text-3xl mx-auto font-bold text-center">
-                            Chat UI
-                        </h1>
-
+                    <div className="h-full overflow-y-auto bg-gray-50 px-3 py-4 dark:bg-gray-800">
                         <div className="mb-3">
                             <h2 className="text-xl">Conversations</h2>
                         </div>
@@ -31,9 +27,9 @@ export default function RootLayout({
                                 <li>
                                     <a
                                         href="#"
-                                        className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                     >
-                                        <span className="flex-1 ml-3 whitespace-nowrap">
+                                        <span className="ml-3 flex-1 whitespace-nowrap">
                                             Home
                                         </span>
                                         {/* <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
@@ -44,9 +40,9 @@ export default function RootLayout({
                                 <li>
                                     <a
                                         href="#"
-                                        className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                     >
-                                        <span className="flex-1 ml-3 whitespace-nowrap">
+                                        <span className="ml-3 flex-1 whitespace-nowrap">
                                             Settings
                                         </span>
                                         {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
@@ -58,7 +54,7 @@ export default function RootLayout({
                         </nav>
                     </div>
                 </aside>
-                <main className="sm:ml-64 p-5">{children}</main>
+                <main className="p-5 sm:ml-64">{children}</main>
             </body>
         </html>
     );
