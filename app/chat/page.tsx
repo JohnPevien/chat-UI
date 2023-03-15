@@ -71,9 +71,7 @@ export default function Page({}: Props) {
 
     const textAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = e.target;
-        if (value.length > 0) {
-            setText(value);
-        }
+        setText(value);
     };
 
     return (
