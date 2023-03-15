@@ -77,8 +77,8 @@ export default function Page({}: Props) {
     };
 
     return (
-        <section className=" mx-auto h-screen max-w-[80%] px-12">
-            <div className="mb-10 h-[80vh] w-full overflow-y-auto">
+        <section className="mx-auto h-screen max-h-screen max-w-[80%] p-12 ">
+            <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
                         chat.map((message, index) => (
