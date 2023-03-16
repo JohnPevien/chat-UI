@@ -111,6 +111,12 @@ export default function Page({}: Props) {
                     onChange={textAreaOnChange}
                     style={{ resize: 'none' }}
                     value={text}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleClick();
+                        }
+                    }}
                 />
 
                 <Button
