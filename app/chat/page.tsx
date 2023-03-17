@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 type Props = {};
 
@@ -82,22 +83,43 @@ export default function Page({}: Props) {
                         chat.map((message, index) => (
                             <div
                                 key={index}
-                                className={`flex flex-row gap-2 whitespace-pre-wrap ${
+                                className={`relative flex flex-row items-center gap-2 whitespace-pre-wrap ${
                                     message?.role === 'user'
                                         ? 'justify-end'
                                         : 'justify-start'
                                 }`}
                             >
                                 {message?.role && (
-                                    <p className="font-semibold capitalize">
-                                        {message?.role}:
-                                    </p>
+                                    <>
+                                        {message?.role !== 'user' && (
+                                            <div className="absolute left-0 top-0 z-10 h-8 w-8 rounded-full bg-gradient-to-r from-red-400 to-blue-500"></div>
+                                        )}
+                                    </>
                                 )}
 
                                 {message?.content && (
-                                    <p className="text-gray-300">
-                                        {message.content}
-                                    </p>
+                                    <div className="flex flex-col">
+                                        <div
+                                            className={`${
+                                                message?.role === 'user'
+                                                    ? 'mr-2'
+                                                    : 'ml-10'
+                                            }`}
+                                        >
+                                            {message?.content}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {message?.role === 'user' && (
+                                    <div className="relative h-8 w-8">
+                                        <Image
+                                            src="/images/user-image.png"
+                                            fill
+                                            alt="User"
+                                            className="absolute left-0 top-0 z-10 h-8 w-8 rounded-full"
+                                        />
+                                    </div>
                                 )}
                             </div>
                         ))}
