@@ -98,7 +98,15 @@ export default function Page({}: Props) {
                                 )}
 
                                 {message?.content && (
-                                    <div className="flex flex-col">
+                                    <div
+                                        className={`flex flex-col
+                                    ${
+                                        message?.role === 'user'
+                                            ? 'items-end'
+                                            : 'items-start'
+                                    }
+                                    `}
+                                    >
                                         <div
                                             className={`${
                                                 message?.role === 'user'
