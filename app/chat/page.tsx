@@ -102,9 +102,9 @@ export default function Page({}: Props) {
                                         <div
                                             className={`${
                                                 message?.role === 'user'
-                                                    ? ' mr-2 rounded-full rounded-br-none bg-gradient-to-r from-red-600 to-blue-600'
+                                                    ? ' mr-2 rounded-full rounded-br-none bg-blue-600'
                                                     : ' rounded-4xl ml-10 mr-2 rounded-3xl rounded-tl-none bg-gray-600 '
-                                            } px-5 py-3`}
+                                            } max-w-[85%] px-5 py-2`}
                                         >
                                             {message?.content}
                                         </div>
