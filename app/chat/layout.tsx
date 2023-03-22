@@ -1,3 +1,5 @@
+import Conversations from '../../components/Conversations';
+
 import '../globals.css';
 
 export const metadata = {
@@ -22,6 +24,10 @@ export default function RootLayout({
                         <div className="mb-3">
                             <h2 className="text-xl">Conversations</h2>
                         </div>
+                        <div>
+                            <Conversations />
+                        </div>
+
                         <nav>
                             <ul className="space-y-2">
                                 <li>
