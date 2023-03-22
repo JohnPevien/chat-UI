@@ -28,8 +28,10 @@ export default function Conversations({}: Props) {
     });
     return (
         <div>
+        <div className="h-80 overflow-y-scroll">
             {conversations.map((conversation) => {
                 return <div key={conversation.id}>{conversation.title}</div>;
+                        className="cursor-pointer rounded p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
             })}
         </div>
     );
