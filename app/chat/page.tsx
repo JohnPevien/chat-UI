@@ -10,6 +10,12 @@ interface Message {
     content: string;
 }
 
+interface Conversation {
+    id: string;
+    messages: Message[];
+    title: string;
+}
+
 const Button = ({
     className,
     onClick,
@@ -33,15 +39,47 @@ const Button = ({
     );
 };
 
+const storeLocalStorage = (chatId: string, conversation: Conversation) => {
+    const chatTitle = prompt('Enter a title for this chat');
+
+    conversation.title = chatTitle || 'No Title';
+
+    if (localStorage.getItem(`chat-${chatId}`)) {
+        const oldConversation = JSON.parse(
+            localStorage.getItem(`chat-${chatId}`) as string
+        );
+
+        conversation.messages = [
+            ...oldConversation.messages,
+            ...conversation.messages,
+        ];
+    }
+
+    localStorage.setItem(`chat-${chatId}`, JSON.stringify(conversation));
+};
+
 export default function Page({}: Props) {
     const [text, setText] = useState<string>('');
-    const [chat, setChat] = useState<any[]>([]);
+    const [chat, setChat] = useState<Conversation>();
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const handleClick = async () => {
-        const conversation = [...chat, { role: 'user', content: text }];
+        const conversation: Conversation = {
+            id: chat?.id || '',
+            title: chat?.title || '',
+            messages: [],
+        };
+
+        if (chat?.messages && chat?.messages.length > 0) {
+            conversation.messages = [
+                ...chat.messages,
+                { role: 'user', content: text },
+            ];
+        } else {
+            conversation.messages = [{ role: 'user', content: text }];
+        }
+
         setChat(conversation);
-        let newConversation = [...conversation];
 
         setSubmitting(true);
         if (text.length > 0) {
@@ -56,15 +94,16 @@ export default function Page({}: Props) {
             const res = await req.json();
 
             if (res) {
-                newConversation = [
-                    ...conversation,
+                conversation.messages = [
+                    ...conversation.messages,
                     {
                         role: 'assistant',
                         content: res.choices[0]?.message.content || '',
                     },
                 ];
 
-                setChat(newConversation);
+                storeLocalStorage(res.id, conversation);
+                setChat(conversation);
             }
         }
         setSubmitting(false);
@@ -74,13 +113,12 @@ export default function Page({}: Props) {
         const { value } = e.target;
         setText(value);
     };
-
     return (
         <section className="mx-auto h-screen max-h-screen max-w-[80%] p-12 ">
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
-                        chat.map((message, index) => (
+                        chat?.messages.map((message, index) => (
                             <div
                                 key={index}
                                 className={`relative flex flex-row items-center gap-2 whitespace-pre-wrap ${
