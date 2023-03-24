@@ -27,12 +27,17 @@ export default function Conversations({}: Props) {
         fetchConversations();
     });
     return (
-        <div>
-        <div className="h-80 overflow-y-scroll">
         <div className="h-80 overflow-y-scroll md:mb-12">
             {conversations.map((conversation) => {
-                return <div key={conversation.id}>{conversation.title}</div>;
-                        className="cursor-pointer rounded p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                return (
+                    <div
+                        key={conversation.id}
+                        onClick={() => onConversationClick(conversation.id)}
+                        className="cursor-pointer rounded p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 "
+                    >
+                        {conversation.title}
+                    </div>
+                );
             })}
         </div>
     );
