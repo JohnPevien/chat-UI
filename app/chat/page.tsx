@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { useChatStore } from '@/store';
 
 type Props = {};
 
@@ -60,7 +61,7 @@ const storeLocalStorage = (chatId: string, conversation: Conversation) => {
 
 export default function Page({}: Props) {
     const [text, setText] = useState<string>('');
-    const [chat, setChat] = useState<Conversation>();
+    const { chat, setChat } = useChatStore();
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const handleClick = async () => {
@@ -118,7 +119,7 @@ export default function Page({}: Props) {
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
-                        chat?.messages.map((message, index) => (
+                        chat?.messages?.map((message, index) => (
                             <div
                                 key={index}
                                 className={`relative flex flex-row items-center gap-2 whitespace-pre-wrap ${
