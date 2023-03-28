@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
-        const json: ChatCompletionRequestMessage[] = await req.json();
+        const json = await req.json();
         const openai = new OpenAIApi(
             new Configuration({
                 apiKey: process.env.OPENAI_API_KEY,
@@ -15,8 +15,8 @@ export async function POST(req: NextRequest) {
         );
 
         const completion = await openai.createChatCompletion({
-            model: 'gpt-3.5-turbo',
-            messages: json,
+            model: 'gpt-4',
+            messages: json.messages,
             max_tokens: process.env.MAX_TOKENS
                 ? parseInt(process.env.MAX_TOKENS, 10)
                 : 500,
