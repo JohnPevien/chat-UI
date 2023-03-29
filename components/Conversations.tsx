@@ -80,7 +80,7 @@ export default function Conversations({}: Props) {
 
             {!confirmClear && (
                 <button
-                    className="mb-5 rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
+                    className="mb-5 block w-full rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
                     onClick={() => setConfirmClear(true)}
                 >
                     Clear Conversations
@@ -89,7 +89,7 @@ export default function Conversations({}: Props) {
 
             {confirmClear && (
                 <button
-                    className="mb-5 rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
+                    className="mb-5 block w-full  rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
                     onClick={clearConversations}
                 >
                     Are you sure?
