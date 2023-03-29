@@ -30,7 +30,7 @@ export default function Conversations({}: Props) {
         };
 
         fetchConversations();
-    });
+    }, []);
 
     const onConversationClick = (id: string) => {
         const conversation = conversations.find(
