@@ -41,15 +41,7 @@ const Button = ({
 };
 
 const storeLocalStorage = (conversation: Conversation) => {
-    if (localStorage.getItem(`chat-${conversation.id}`)) {
-        const oldConversation = JSON.parse(
-            localStorage.getItem(`chat-${conversation.id}`) as string
-        );
-        conversation.messages = [
-            ...oldConversation.messages,
-            ...conversation.messages,
-        ];
-    } else {
+    if (!localStorage.getItem(`chat-${conversation.id}`)) {
         const chatTitle = prompt('Enter a title for this chat');
         conversation.title = chatTitle || 'No Title';
     }
@@ -103,8 +95,9 @@ export default function Page({}: Props) {
                     },
                 ];
 
-                setChat(conversation);
+
                 storeLocalStorage(conversation);
+                setChat(conversation);
             }
         }
         setSubmitting(false);
