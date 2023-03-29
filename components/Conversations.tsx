@@ -69,6 +69,15 @@ export default function Conversations({}: Props) {
                     );
                 })}
             </div>
+
+            <button
+                className="mb-5 block w-full  rounded bg-blue-600
+                    px-5 py-2 hover:bg-blue-800"
+                onClick={() => setChat({})}
+            >
+                New Chat
+            </button>
+
             {!confirmClear && (
                 <button
                     className="mb-5 rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
