@@ -40,23 +40,24 @@ const Button = ({
     );
 };
 
-const storeLocalStorage = (chatId: string, conversation: Conversation) => {
-    const chatTitle = prompt('Enter a title for this chat');
-
-    conversation.title = chatTitle || 'No Title';
-
-    if (localStorage.getItem(`chat-${chatId}`)) {
+const storeLocalStorage = (conversation: Conversation) => {
+    if (localStorage.getItem(`chat-${conversation.id}`)) {
         const oldConversation = JSON.parse(
-            localStorage.getItem(`chat-${chatId}`) as string
+            localStorage.getItem(`chat-${conversation.id}`) as string
         );
-
         conversation.messages = [
             ...oldConversation.messages,
             ...conversation.messages,
         ];
+    } else {
+        const chatTitle = prompt('Enter a title for this chat');
+        conversation.title = chatTitle || 'No Title';
     }
 
-    localStorage.setItem(`chat-${chatId}`, JSON.stringify(conversation));
+    localStorage.setItem(
+        `chat-${conversation.id}`,
+        JSON.stringify(conversation)
+    );
 };
 
 export default function Page({}: Props) {
@@ -80,8 +81,6 @@ export default function Page({}: Props) {
             conversation.messages = [{ role: 'user', content: text }];
         }
 
-        setChat(conversation);
-
         setSubmitting(true);
         if (text.length > 0) {
             setText('');
@@ -95,6 +94,7 @@ export default function Page({}: Props) {
             const res = await req.json();
 
             if (res) {
+                if (!conversation?.id) conversation.id = res.id;
                 conversation.messages = [
                     ...conversation.messages,
                     {
@@ -103,8 +103,8 @@ export default function Page({}: Props) {
                     },
                 ];
 
-                storeLocalStorage(res.id, conversation);
                 setChat(conversation);
+                storeLocalStorage(conversation);
             }
         }
         setSubmitting(false);
