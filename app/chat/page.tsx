@@ -107,7 +107,7 @@ export default function Page({}: Props) {
         setText(value);
     };
     return (
-        <section className="mx-auto h-screen max-h-screen max-w-[80%] p-12 ">
+        <section className="mx-auto h-screen max-h-screen max-w-full p-12 sm:max-w-[90%] md:max-w-[80%] ">
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
@@ -166,7 +166,7 @@ export default function Page({}: Props) {
             </div>
             <div className="relative bg-gray-900 ">
                 <textarea
-                    className="h-18 text-md w-3/4 overflow-y-auto bg-transparent py-5 px-5 outline-none"
+                    className="h-18 text-md w-full overflow-y-auto bg-transparent py-5 px-5 outline-none md:w-3/4"
                     rows={2}
                     placeholder="Type your message here..."
                     onChange={textAreaOnChange}
