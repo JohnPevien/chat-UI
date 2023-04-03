@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useChatStore } from '@/store';
+
+import { toast } from 'react-toastify';
 type Props = {};
 
 export default function Conversations({}: Props) {
@@ -52,6 +54,7 @@ export default function Conversations({}: Props) {
         setConversations([]);
         setChat({});
         setConfirmClear(false);
+        toast.info('Successfully Cleared All Conversations');
     };
 
     return (

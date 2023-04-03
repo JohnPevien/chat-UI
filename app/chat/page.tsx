@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useChatStore } from '@/store';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type Props = {};
 
@@ -211,6 +213,7 @@ export default function Page({}: Props) {
                     )}
                 </Button>
             </div>
+            <ToastContainer position="bottom-right" theme="dark" />
         </section>
     );
 }
