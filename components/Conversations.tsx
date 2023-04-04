@@ -6,8 +6,7 @@ import { toast } from 'react-toastify';
 type Props = {};
 
 export default function Conversations({}: Props) {
-    const [conversations, setConversations] = useState<any[]>([]);
-    const { setChat } = useChatStore();
+    const { setChat, conversations, setConversations } = useChatStore();
 
     const [confirmClear, setConfirmClear] = useState(false);
 
@@ -17,16 +16,19 @@ export default function Conversations({}: Props) {
             const conversationKeys: string[] = Object.keys(
                 localStorageObj
             ).filter((key) => key.startsWith('chat'));
+            let conversations = [];
+            if (conversationKeys.length !== 0) {
+                conversations = conversationKeys.map((key) => {
+                    const conversation = JSON.parse(
+                        (localStorage.getItem(key) as string) ?? {}
+                    );
 
-            const conversations = conversationKeys.map((key) => {
-                const conversation = JSON.parse(
-                    localStorage.getItem(key) as string
-                );
-                return {
-                    id: key,
-                    ...conversation,
-                };
-            });
+                    return {
+                        id: key,
+                        ...conversation,
+                    };
+                });
+            }
 
             setConversations(conversations);
         };
@@ -38,7 +40,13 @@ export default function Conversations({}: Props) {
         const conversation = conversations.find(
             (conversation) => conversation.id === id
         );
-        setChat(conversation);
+
+        if (!conversation) {
+            toast.error('Conversation not found');
+            return;
+        } else {
+            setChat(conversation);
+        }
     };
 
     const clearConversations = () => {
@@ -64,7 +72,9 @@ export default function Conversations({}: Props) {
                     return (
                         <div
                             key={conversation.id}
-                            onClick={() => onConversationClick(conversation.id)}
+                            onClick={() =>
+                                onConversationClick(conversation?.id || '')
+                            }
                             className="cursor-pointer rounded p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 "
                         >
                             {conversation.title}
