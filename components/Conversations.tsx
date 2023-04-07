@@ -1,11 +1,12 @@
-'use client';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useChatStore } from '@/store';
 
 import { toast } from 'react-toastify';
-type Props = {};
+type Props = {
+    setShowMobileNav: Dispatch<SetStateAction<boolean>>;
+};
 
-export default function Conversations({}: Props) {
+export default function Conversations({ setShowMobileNav }: Props) {
     const { setChat, chats, setChats } = useChatStore();
 
     const [confirmClear, setConfirmClear] = useState(false);
@@ -46,6 +47,7 @@ export default function Conversations({}: Props) {
             return;
         } else {
             setChat(conversation);
+            setShowMobileNav(false);
         }
     };
 
