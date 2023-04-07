@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useChatStore } from '@/store';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type Props = {};
 
@@ -11,7 +13,7 @@ interface Message {
     content: string;
 }
 
-interface Conversation {
+interface Chat {
     id: string;
     messages: Message[];
     title: string;
@@ -40,32 +42,35 @@ const Button = ({
     );
 };
 
-const storeLocalStorage = (chatId: string, conversation: Conversation) => {
-    const chatTitle = prompt('Enter a title for this chat');
-
-    conversation.title = chatTitle || 'No Title';
-
-    if (localStorage.getItem(`chat-${chatId}`)) {
-        const oldConversation = JSON.parse(
-            localStorage.getItem(`chat-${chatId}`) as string
-        );
-
-        conversation.messages = [
-            ...oldConversation.messages,
-            ...conversation.messages,
-        ];
+const storeLocalStorage = (chat: Chat) => {
+    if (!localStorage.getItem(`chat-${chat.id}`)) {
+        const chatTitle = prompt('Enter a title for this chat');
+        chat.title = chatTitle || 'No Title';
     }
 
-    localStorage.setItem(`chat-${chatId}`, JSON.stringify(conversation));
+    localStorage.setItem(`chat-${chat.id}`, JSON.stringify(chat));
 };
 
 export default function Page({}: Props) {
     const [text, setText] = useState<string>('');
-    const { chat, setChat } = useChatStore();
+    const { chat, setChat, chats, setChats } = useChatStore();
     const [submitting, setSubmitting] = useState<boolean>(false);
 
+    const updateConversationsList = (chat: Chat) => {
+        const chatToUpdateIndex = chats.findIndex(
+            (conversation) => conversation.id === chat.id
+        );
+        const updatedChat = { ...chat };
+        const newConversations = [
+            ...chats.slice(0, chatToUpdateIndex),
+            updatedChat,
+            ...chats.slice(chatToUpdateIndex + 1),
+        ];
+        setChats(newConversations);
+    };
+
     const handleClick = async () => {
-        const conversation: Conversation = {
+        const conversation: Chat = {
             id: chat?.id || '',
             title: chat?.title || '',
             messages: [],
@@ -80,8 +85,6 @@ export default function Page({}: Props) {
             conversation.messages = [{ role: 'user', content: text }];
         }
 
-        setChat(conversation);
-
         setSubmitting(true);
         if (text.length > 0) {
             setText('');
@@ -95,6 +98,7 @@ export default function Page({}: Props) {
             const res = await req.json();
 
             if (res) {
+                if (!conversation?.id) conversation.id = res.id;
                 conversation.messages = [
                     ...conversation.messages,
                     {
@@ -103,7 +107,8 @@ export default function Page({}: Props) {
                     },
                 ];
 
-                storeLocalStorage(res.id, conversation);
+                storeLocalStorage(conversation);
+                updateConversationsList(conversation);
                 setChat(conversation);
             }
         }
@@ -114,8 +119,9 @@ export default function Page({}: Props) {
         const { value } = e.target;
         setText(value);
     };
+
     return (
-        <section className="mx-auto h-screen max-h-screen max-w-[80%] p-12 ">
+        <section className="mx-auto h-screen max-h-screen max-w-full p-12 sm:max-w-[90%] md:max-w-[80%] ">
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
@@ -149,9 +155,9 @@ export default function Page({}: Props) {
                                         <div
                                             className={`${
                                                 message?.role === 'user'
-                                                    ? ' mr-2 rounded-full rounded-br-none bg-blue-600'
-                                                    : ' rounded-4xl ml-10 mr-2 rounded-3xl rounded-tl-none bg-gray-600 '
-                                            } max-w-[85%] px-5 py-2`}
+                                                    ? ' mr-2 rounded-xl  bg-blue-600'
+                                                    : ' rounded-4xl ml-10 mr-2 rounded-xl bg-gray-600 '
+                                            } max-w-[85%] px-4 py-3`}
                                         >
                                             {message?.content}
                                         </div>
@@ -174,7 +180,7 @@ export default function Page({}: Props) {
             </div>
             <div className="relative bg-gray-900 ">
                 <textarea
-                    className="h-18 text-md w-3/4 overflow-y-auto bg-transparent py-5 px-5 outline-none"
+                    className="h-18 text-md w-full overflow-y-auto bg-transparent py-5 px-5 outline-none md:w-3/4"
                     rows={2}
                     placeholder="Type your message here..."
                     onChange={textAreaOnChange}
@@ -219,6 +225,7 @@ export default function Page({}: Props) {
                     )}
                 </Button>
             </div>
+            <ToastContainer position="bottom-right" theme="dark" />
         </section>
     );
 }

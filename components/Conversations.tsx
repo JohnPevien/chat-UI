@@ -1,45 +1,57 @@
-'use client';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useChatStore } from '@/store';
-type Props = {};
 
-export default function Conversations({}: Props) {
-    const [conversations, setConversations] = useState<any[]>([]);
-    const { setChat } = useChatStore();
+import { toast } from 'react-toastify';
+type Props = {
+    setShowMobileNav: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function Conversations({ setShowMobileNav }: Props) {
+    const { setChat, chats, setChats } = useChatStore();
 
     const [confirmClear, setConfirmClear] = useState(false);
 
     useEffect(() => {
-        const fetchConversations = () => {
+        const fetchChats = () => {
             const localStorageObj = { ...localStorage };
             const conversationKeys: string[] = Object.keys(
                 localStorageObj
             ).filter((key) => key.startsWith('chat'));
+            let Chats = [];
+            if (conversationKeys.length !== 0) {
+                Chats = conversationKeys.map((key) => {
+                    const conversation = JSON.parse(
+                        (localStorage.getItem(key) as string) ?? {}
+                    );
 
-            const conversations = conversationKeys.map((key) => {
-                const conversation = JSON.parse(
-                    localStorage.getItem(key) as string
-                );
-                return {
-                    id: key,
-                    ...conversation,
-                };
-            });
+                    return {
+                        id: key,
+                        ...conversation,
+                    };
+                });
+            }
 
-            setConversations(conversations);
+            setChats(Chats);
         };
 
-        fetchConversations();
-    });
+        fetchChats();
+    }, []);
 
     const onConversationClick = (id: string) => {
-        const conversation = conversations.find(
+        const conversation = chats.find(
             (conversation) => conversation.id === id
         );
-        setChat(conversation);
+
+        if (!conversation) {
+            toast.error('Conversation not found');
+            return;
+        } else {
+            setChat(conversation);
+            setShowMobileNav(false);
+        }
     };
 
-    const clearConversations = () => {
+    const clearChats = () => {
         const localStorageObj = { ...localStorage };
         const conversationKeys: string[] = Object.keys(localStorageObj).filter(
             (key) => key.startsWith('chat')
@@ -49,29 +61,39 @@ export default function Conversations({}: Props) {
             localStorage.removeItem(key);
         });
 
-        setConversations([]);
+        setChats([]);
         setChat({});
         setConfirmClear(false);
+        toast.info('Successfully Cleared All Conversations');
     };
 
     return (
         <aside>
             <div className="h-80 overflow-y-scroll md:mb-12">
-                {conversations.map((conversation) => {
+                {chats.map((chat) => {
                     return (
                         <div
-                            key={conversation.id}
-                            onClick={() => onConversationClick(conversation.id)}
+                            key={chat.id}
+                            onClick={() => onConversationClick(chat?.id || '')}
                             className="cursor-pointer rounded p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 "
                         >
-                            {conversation.title}
+                            {chat.title}
                         </div>
                     );
                 })}
             </div>
+
+            <button
+                className="mb-5 block w-full  rounded bg-blue-600
+                    px-5 py-2 hover:bg-blue-800"
+                onClick={() => setChat({})}
+            >
+                New Chat
+            </button>
+
             {!confirmClear && (
                 <button
-                    className="mb-5 rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
+                    className="mb-5 block w-full rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
                     onClick={() => setConfirmClear(true)}
                 >
                     Clear Conversations
@@ -80,8 +102,8 @@ export default function Conversations({}: Props) {
 
             {confirmClear && (
                 <button
-                    className="mb-5 rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
-                    onClick={clearConversations}
+                    className="mb-5 block w-full  rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
+                    onClick={clearChats}
                 >
                     Are you sure?
                 </button>
