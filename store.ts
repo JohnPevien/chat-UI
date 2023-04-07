@@ -14,8 +14,8 @@ interface Chat {
 type chatStore = {
     chat: Chat;
     setChat: (state: Chat) => void;
-    conversations: Chat[];
-    setConversations: (state: Chat[]) => void;
+    chats: Chat[];
+    setChats: (state: Chat[]) => void;
 };
 
 export const useChatStore = create<chatStore>((set) => ({
@@ -23,8 +23,8 @@ export const useChatStore = create<chatStore>((set) => ({
     setChat: (state: Chat) => {
         set({ chat: state });
     },
-    conversations: [] as Chat[],
-    setConversations: (state: Chat[]) => {
-        set({ conversations: state });
+    chats: [] as Chat[],
+    setChats: (state: Chat[]) => {
+        set({ chats: state });
     },
 }));

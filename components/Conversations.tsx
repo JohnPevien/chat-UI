@@ -6,19 +6,19 @@ import { toast } from 'react-toastify';
 type Props = {};
 
 export default function Conversations({}: Props) {
-    const { setChat, conversations, setConversations } = useChatStore();
+    const { setChat, chats, setChats } = useChatStore();
 
     const [confirmClear, setConfirmClear] = useState(false);
 
     useEffect(() => {
-        const fetchConversations = () => {
+        const fetchChats = () => {
             const localStorageObj = { ...localStorage };
             const conversationKeys: string[] = Object.keys(
                 localStorageObj
             ).filter((key) => key.startsWith('chat'));
-            let conversations = [];
+            let Chats = [];
             if (conversationKeys.length !== 0) {
-                conversations = conversationKeys.map((key) => {
+                Chats = conversationKeys.map((key) => {
                     const conversation = JSON.parse(
                         (localStorage.getItem(key) as string) ?? {}
                     );
@@ -30,14 +30,14 @@ export default function Conversations({}: Props) {
                 });
             }
 
-            setConversations(conversations);
+            setChats(Chats);
         };
 
-        fetchConversations();
+        fetchChats();
     }, []);
 
     const onConversationClick = (id: string) => {
-        const conversation = conversations.find(
+        const conversation = chats.find(
             (conversation) => conversation.id === id
         );
 
@@ -49,7 +49,7 @@ export default function Conversations({}: Props) {
         }
     };
 
-    const clearConversations = () => {
+    const clearChats = () => {
         const localStorageObj = { ...localStorage };
         const conversationKeys: string[] = Object.keys(localStorageObj).filter(
             (key) => key.startsWith('chat')
@@ -59,7 +59,7 @@ export default function Conversations({}: Props) {
             localStorage.removeItem(key);
         });
 
-        setConversations([]);
+        setChats([]);
         setChat({});
         setConfirmClear(false);
         toast.info('Successfully Cleared All Conversations');
@@ -68,16 +68,14 @@ export default function Conversations({}: Props) {
     return (
         <aside>
             <div className="h-80 overflow-y-scroll md:mb-12">
-                {conversations.map((conversation) => {
+                {chats.map((chat) => {
                     return (
                         <div
-                            key={conversation.id}
-                            onClick={() =>
-                                onConversationClick(conversation?.id || '')
-                            }
+                            key={chat.id}
+                            onClick={() => onConversationClick(chat?.id || '')}
                             className="cursor-pointer rounded p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 "
                         >
-                            {conversation.title}
+                            {chat.title}
                         </div>
                     );
                 })}
@@ -103,7 +101,7 @@ export default function Conversations({}: Props) {
             {confirmClear && (
                 <button
                     className="mb-5 block w-full  rounded bg-red-500 py-2 px-4 text-white hover:bg-red-700"
-                    onClick={clearConversations}
+                    onClick={clearChats}
                 >
                     Are you sure?
                 </button>

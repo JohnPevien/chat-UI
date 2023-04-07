@@ -13,7 +13,7 @@ interface Message {
     content: string;
 }
 
-interface Conversation {
+interface Chat {
     id: string;
     messages: Message[];
     title: string;
@@ -42,25 +42,35 @@ const Button = ({
     );
 };
 
-const storeLocalStorage = (conversation: Conversation) => {
-    if (!localStorage.getItem(`chat-${conversation.id}`)) {
+const storeLocalStorage = (chat: Chat) => {
+    if (!localStorage.getItem(`chat-${chat.id}`)) {
         const chatTitle = prompt('Enter a title for this chat');
-        conversation.title = chatTitle || 'No Title';
+        chat.title = chatTitle || 'No Title';
     }
 
-    localStorage.setItem(
-        `chat-${conversation.id}`,
-        JSON.stringify(conversation)
-    );
+    localStorage.setItem(`chat-${chat.id}`, JSON.stringify(chat));
 };
 
 export default function Page({}: Props) {
     const [text, setText] = useState<string>('');
-    const { chat, setChat } = useChatStore();
+    const { chat, setChat, chats, setChats } = useChatStore();
     const [submitting, setSubmitting] = useState<boolean>(false);
 
+    const updateConversationsList = (chat: Chat) => {
+        const chatToUpdateIndex = chats.findIndex(
+            (conversation) => conversation.id === chat.id
+        );
+        const updatedChat = { ...chat };
+        const newConversations = [
+            ...chats.slice(0, chatToUpdateIndex),
+            updatedChat,
+            ...chats.slice(chatToUpdateIndex + 1),
+        ];
+        setChats(newConversations);
+    };
+
     const handleClick = async () => {
-        const conversation: Conversation = {
+        const conversation: Chat = {
             id: chat?.id || '',
             title: chat?.title || '',
             messages: [],
@@ -98,6 +108,7 @@ export default function Page({}: Props) {
                 ];
 
                 storeLocalStorage(conversation);
+                updateConversationsList(conversation);
                 setChat(conversation);
             }
         }
@@ -108,6 +119,7 @@ export default function Page({}: Props) {
         const { value } = e.target;
         setText(value);
     };
+
     return (
         <section className="mx-auto h-screen max-h-screen max-w-full p-12 sm:max-w-[90%] md:max-w-[80%] ">
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
