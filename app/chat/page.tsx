@@ -60,13 +60,18 @@ export default function Page({}: Props) {
         const chatToUpdateIndex = chats.findIndex(
             (conversation) => conversation.id === chat.id
         );
-        const updatedChat = { ...chat };
-        const newConversations = [
-            ...chats.slice(0, chatToUpdateIndex),
-            updatedChat,
-            ...chats.slice(chatToUpdateIndex + 1),
-        ];
-        setChats(newConversations);
+
+        if (chatToUpdateIndex !== -1) {
+            const updatedChat = { ...chat };
+            const newConversations = [
+                ...chats.slice(0, chatToUpdateIndex),
+                updatedChat,
+                ...chats.slice(chatToUpdateIndex + 1),
+            ];
+            setChats(newConversations);
+        } else {
+            setChats([...chats, chat]);
+        }
     };
 
     const handleClick = async () => {
