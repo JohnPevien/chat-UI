@@ -126,7 +126,7 @@ export default function Page({}: Props) {
     };
 
     return (
-        <section className="mx-auto h-screen max-h-screen max-w-full p-12 sm:max-w-[90%] md:max-w-[80%] ">
+        <section className="h-screen max-h-screen w-full max-w-full p-4 md:mx-auto md:max-w-[90%]  md:p-12 ">
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
@@ -170,12 +170,12 @@ export default function Page({}: Props) {
                                 )}
 
                                 {message?.role === 'user' && (
-                                    <div className="relative h-8 w-8">
+                                    <div className="relative h-8 min-h-[2rem] w-8 min-w-[2rem]">
                                         <Image
                                             src="/images/user-image.png"
                                             fill
                                             alt="User"
-                                            className="absolute left-0 top-0 z-10 h-8 w-8 rounded-full"
+                                            className="absolute left-0 top-0 z-10 rounded-full"
                                         />
                                     </div>
                                 )}

@@ -20,7 +20,7 @@ function SideBar({}: Props) {
                 } overflow-y-auto transition-transform sm:translate-x-0`}
                 aria-label="Sidebar"
             >
-                <div className="h-full overflow-y-auto bg-gray-50 px-3 py-4 dark:bg-gray-800">
+                <div className="h-full max-h-screen overflow-y-auto bg-gray-50 px-3 py-4 dark:bg-gray-800">
                     <div className="mb-3">
                         <h2 className="text-xl">Conversations</h2>
                     </div>
@@ -47,7 +47,7 @@ function SideBar({}: Props) {
                     </nav>
                 </div>
             </aside>
-            <div className="flex justify-end p-4">
+            <div className="flex justify-end p-4 md:hidden">
                 <button
                     className=" cursor-pointer sm:hidden"
                     onClick={toggleMobileNav}
