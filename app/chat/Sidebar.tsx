@@ -47,7 +47,7 @@ function SideBar({}: Props) {
                     </nav>
                 </div>
             </aside>
-            <div className="flex justify-end p-4">
+            <div className="flex justify-end p-4 sm:hidden">
                 <button
                     className=" cursor-pointer sm:hidden"
                     onClick={toggleMobileNav}
