@@ -126,7 +126,9 @@ export default function Page({}: Props) {
     };
 
     return (
+
         <section className="mx-auto h-full max-w-full px-8 sm:max-w-[90%] sm:p-12  ">
+
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
@@ -170,12 +172,12 @@ export default function Page({}: Props) {
                                 )}
 
                                 {message?.role === 'user' && (
-                                    <div className="relative h-8 w-8">
+                                    <div className="relative h-8 min-h-[2rem] w-8 min-w-[2rem]">
                                         <Image
                                             src="/images/user-image.png"
                                             fill
                                             alt="User"
-                                            className="absolute left-0 top-0 z-10 h-8 w-8 rounded-full"
+                                            className="absolute left-0 top-0 z-10 rounded-full"
                                         />
                                     </div>
                                 )}
