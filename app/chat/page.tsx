@@ -126,7 +126,7 @@ export default function Page({}: Props) {
     };
 
     return (
-        <section className="mx-auto h-screen max-h-screen max-w-full p-12 sm:max-w-[90%] md:max-w-[80%] ">
+        <section className="mx-auto h-full max-w-full p-12 sm:max-w-[90%]  ">
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
