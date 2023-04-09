@@ -64,6 +64,7 @@ export default function Conversations({ setShowMobileNav }: Props) {
         setChats([]);
         setChat({});
         setConfirmClear(false);
+        setShowMobileNav(false);
         toast.info('Successfully Cleared All Conversations');
     };
 
@@ -86,7 +87,10 @@ export default function Conversations({ setShowMobileNav }: Props) {
             <button
                 className="mb-5 block w-full  rounded bg-blue-600
                     px-5 py-2 hover:bg-blue-800"
-                onClick={() => setChat({})}
+                onClick={() => {
+                    setChat({});
+                    setShowMobileNav(false);
+                }}
             >
                 New Chat
             </button>
