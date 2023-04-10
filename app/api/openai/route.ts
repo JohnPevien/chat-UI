@@ -17,9 +17,7 @@ export async function POST(req: NextRequest) {
         const completion = await openai.createChatCompletion({
             model: 'gpt-3.5-turbo',
             messages: json.messages,
-            max_tokens: process.env.MAX_TOKENS
-                ? parseInt(process.env.MAX_TOKENS, 10)
-                : 500,
+            max_tokens: 500,
         });
 
         const {

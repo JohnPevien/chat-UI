@@ -97,7 +97,10 @@ export default function Page({}: Props) {
             const req = await fetch('/api/openai', {
                 method: 'POST',
                 body: JSON.stringify(conversation),
-                mode: 'cors',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
             });
 
             const res = await req.json();
