@@ -129,9 +129,7 @@ export default function Page({}: Props) {
     };
 
     return (
-
         <section className="mx-auto h-full max-w-full px-8 sm:max-w-[90%] sm:p-12  ">
-
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
                 <div className="flex flex-col gap-5">
                     {chat &&
@@ -147,7 +145,7 @@ export default function Page({}: Props) {
                                 {message?.role && (
                                     <>
                                         {message?.role !== 'user' && (
-                                            <div className="absolute left-0 top-0 z-10 h-8 w-8 rounded-full bg-gradient-to-r from-red-400 to-blue-500"></div>
+                                            <div className="absolute left-0 top-2 z-10 h-8 w-8 rounded-full bg-gradient-to-r from-red-400 to-blue-500"></div>
                                         )}
                                     </>
                                 )}
@@ -163,10 +161,10 @@ export default function Page({}: Props) {
                                     `}
                                     >
                                         <div
-                                            className={`${
+                                            className={` rounded-xl ${
                                                 message?.role === 'user'
-                                                    ? ' mr-2 rounded-xl  bg-blue-600'
-                                                    : ' rounded-4xl ml-10 mr-2 rounded-xl bg-gray-600 '
+                                                    ? ' mr-10  bg-blue-600'
+                                                    : '  ml-10  bg-gray-600 '
                                             } max-w-[85%] px-4 py-3`}
                                         >
                                             {message?.content}
@@ -175,7 +173,7 @@ export default function Page({}: Props) {
                                 )}
 
                                 {message?.role === 'user' && (
-                                    <div className="relative h-8 min-h-[2rem] w-8 min-w-[2rem]">
+                                    <div className="absolute top-2 right-0 h-8 min-h-[2rem] w-8 min-w-[2rem]">
                                         <Image
                                             src="/images/user-image.png"
                                             fill
