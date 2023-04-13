@@ -20,6 +20,12 @@ export default function Conversations({ setShowMobileNav }: Props) {
             let Chats = [];
             if (conversationKeys.length !== 0) {
                 Chats = conversationKeys.map((key) => {
+                    const conversationString = localStorage.getItem(key);
+                    if (
+                        conversationString === undefined ||
+                        conversationString === 'undefined'
+                    )
+                        return;
                     const conversation = JSON.parse(
                         (localStorage.getItem(key) as string) ?? {}
                     );
@@ -30,6 +36,8 @@ export default function Conversations({ setShowMobileNav }: Props) {
                     };
                 });
             }
+            // remove undefined
+            Chats = Chats.filter((chat) => chat !== undefined);
 
             setChats(Chats);
         };
