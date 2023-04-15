@@ -1,35 +1,38 @@
-import { Configuration, ChatCompletionRequestMessage, OpenAIApi } from 'openai';
-import { NextResponse, NextRequest } from 'next/server';
+import {
+    OpenAIStream,
+    OpenAIStreamPayload,
+    ChatGPTMessage,
+} from '@/utils/OpenAIStream';
 
-export async function GET(req: NextRequest) {
-    return new Response('Hello, Next.js GET!');
+if (!process.env.OPENAI_API_KEY) {
+    throw new Error('Missing env var from OpenAI');
 }
 
-export async function POST(req: NextRequest) {
-    try {
-        const json = await req.json();
-        const openai = new OpenAIApi(
-            new Configuration({
-                apiKey: process.env.OPENAI_API_KEY,
-            })
-        );
+export const config = {
+    runtime: 'edge',
+};
 
-        const completion = await openai.createChatCompletion({
-            model: 'gpt-3.5-turbo',
-            messages: json.messages,
-            max_tokens: 500,
-        });
+export async function POST(req: Request): Promise<Response> {
+    const body = await req.json();
+    console.log(body);
+    console.log(body.messages);
 
-        const {
-            data: { choices, id },
-        } = completion;
-
-        return new NextResponse(JSON.stringify({ choices, id }), {
-            status: 200,
-        });
-    } catch (error) {
-        return new NextResponse(JSON.stringify(error), {
-            status: 500,
-        });
+    if (!body) {
+        return new Response('No prompt in the request', { status: 400 });
     }
+
+    const payload: OpenAIStreamPayload = {
+        model: 'gpt-3.5-turbo',
+        messages: body.messages,
+        temperature: 0.7,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        max_tokens: 200,
+        stream: true,
+        n: 1,
+    };
+
+    const stream = await OpenAIStream(payload);
+    return new Response(stream);
 }
