@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useChatStore } from '@/store';
 import { ToastContainer } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 type Props = {};
@@ -54,6 +55,8 @@ const storeLocalStorage = (chat: Chat) => {
 export default function Page({}: Props) {
     const [text, setText] = useState<string>('');
     const { chat, setChat, chats, setChats } = useChatStore();
+    const [streamReply, setStreamReply] = useState<string>('');
+    const [streaming, setStreaming] = useState<boolean>(false);
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const updateConversationsList = (chat: Chat) => {
@@ -90,35 +93,58 @@ export default function Page({}: Props) {
             conversation.messages = [{ role: 'user', content: text }];
         }
 
+        setChat(conversation);
+
         setSubmitting(true);
         if (text.length > 0) {
-            setText('');
-
-            const req = await fetch('/api/openai', {
+            console.log('entered');
+            const response = await fetch('/api/openai', {
                 method: 'POST',
                 body: JSON.stringify(conversation),
-                headers: new Headers({
+                headers: {
                     'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                }),
+                },
             });
 
-            const res = await req.json();
-
-            if (res) {
-                if (!conversation?.id) conversation.id = res.id;
-                conversation.messages = [
-                    ...conversation.messages,
-                    {
-                        role: 'assistant',
-                        content: res.choices[0]?.message.content || '',
-                    },
-                ];
-
-                storeLocalStorage(conversation);
-                updateConversationsList(conversation);
-                setChat(conversation);
+            if (!response.ok) {
+                throw new Error(response.statusText);
             }
+
+            const data = response.body;
+            if (!data) {
+                return;
+            }
+
+            const reader = data.getReader();
+            const decoder = new TextDecoder();
+            let done = false;
+
+            let text = '';
+
+            setStreaming(true);
+
+            while (!done) {
+                const { value, done: doneReading } = await reader.read();
+                done = doneReading;
+                const chunkValue = decoder.decode(value);
+                text += chunkValue;
+                setStreamReply(text);
+            }
+
+            setStreaming(false);
+
+            conversation.messages = [
+                ...conversation.messages,
+                {
+                    role: 'system',
+                    content: text,
+                },
+            ];
+
+            storeLocalStorage(conversation);
+            updateConversationsList(conversation);
+            setChat(conversation);
+            setText('');
         }
         setSubmitting(false);
     };
@@ -184,6 +210,25 @@ export default function Page({}: Props) {
                                 )}
                             </div>
                         ))}
+                    {streaming && (
+                        <div
+                            className={`relative flex flex-row items-center justify-start gap-2 whitespace-pre-wrap`}
+                        >
+                            <div className="absolute left-0 top-2 z-10 h-8 w-8 rounded-full bg-gradient-to-r from-red-400 to-blue-500"></div>
+
+                            <div
+                                className={`flex flex-col
+                                    items-start
+                                    `}
+                            >
+                                <div
+                                    className={` ml-10 max-w-[85%]  rounded-xl bg-gray-600 px-4 py-3`}
+                                >
+                                    {streamReply}
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="relative bg-gray-900 ">
