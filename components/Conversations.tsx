@@ -26,10 +26,10 @@ export default function Conversations({ setShowMobileNav }: Props) {
                         conversationString === 'undefined'
                     )
                         return;
-                    const conversation = JSON.parse(
-                        (localStorage.getItem(key) as string) ?? {}
-                    );
 
+                    const conversation = JSON.parse(
+                        (localStorage.getItem(key) as string) ?? '{}'
+                    );
                     return {
                         id: key,
                         ...conversation,

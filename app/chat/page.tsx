@@ -52,7 +52,7 @@ const storeLocalStorage = (chat: Chat) => {
     localStorage.setItem(`chat-${chat.id}`, JSON.stringify(chat));
 };
 
-export default function Page({}: Props) {
+const Page = ({}: Props) => {
     const [text, setText] = useState<string>('');
     const { chat, setChat, chats, setChats } = useChatStore();
     const [streamReply, setStreamReply] = useState<string>('');
@@ -294,4 +294,6 @@ export default function Page({}: Props) {
             <ToastContainer position="bottom-right" theme="dark" />
         </section>
     );
-}
+};
+
+export default Page;

@@ -1,11 +1,11 @@
 'use client';
 
-import Conversations from '../../components/Conversations';
+import Conversations from '@/components/Conversations';
 import Link from 'next/link';
 import { useState } from 'react';
 
 type Props = {};
-function SideBar({}: Props) {
+const SideBar = ({}: Props) => {
     const [showMobileNav, setShowMobileNav] = useState(false);
 
     const toggleMobileNav = () => {
@@ -49,7 +49,6 @@ function SideBar({}: Props) {
             </aside>
 
             <div className="flex justify-end p-4 sm:hidden">
-
                 <button
                     className=" cursor-pointer sm:hidden"
                     onClick={toggleMobileNav}
@@ -72,5 +71,5 @@ function SideBar({}: Props) {
             </div>
         </>
     );
-}
+};
 export default SideBar;
