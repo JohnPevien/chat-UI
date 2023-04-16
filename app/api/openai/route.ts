@@ -14,8 +14,6 @@ export const config = {
 
 export async function POST(req: Request): Promise<Response> {
     const body = await req.json();
-    console.log(body);
-    console.log(body.messages);
 
     if (!body) {
         return new Response('No prompt in the request', { status: 400 });
@@ -28,7 +26,7 @@ export async function POST(req: Request): Promise<Response> {
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
-        max_tokens: 4000,
+        max_tokens: 1000,
         stream: true,
         n: 1,
     };
