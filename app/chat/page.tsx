@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useChatStore } from '@/store';
 import { ToastContainer } from 'react-toastify';
@@ -58,6 +58,7 @@ const Page = ({}: Props) => {
     const [streamReply, setStreamReply] = useState<string>('');
     const [streaming, setStreaming] = useState<boolean>(false);
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const chatbox = useRef<HTMLDivElement>(null);
 
     const updateConversationsList = (chat: Chat) => {
         const chatToUpdateIndex = chats.findIndex(
@@ -77,6 +78,26 @@ const Page = ({}: Props) => {
         }
     };
 
+    const scrollTobottom = () => {
+        if (chatbox.current) {
+            chatbox?.current?.lastElementChild?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'end',
+                inline: 'nearest',
+            });
+        }
+    };
+
+    useEffect(() => {
+        const scrollInterval = setInterval(() => {
+            if (streaming) {
+                scrollTobottom();
+            }
+        }, 250);
+
+        return () => clearInterval(scrollInterval);
+    }, [streaming]);
+
     const handleClick = async () => {
         const conversation: Chat = {
             id: chat?.id || '',
@@ -94,10 +115,13 @@ const Page = ({}: Props) => {
         }
 
         setChat(conversation);
+        setText('');
+        setTimeout(() => {
+            scrollTobottom();
+        }, 100);
 
         setSubmitting(true);
         if (text.length > 0) {
-            console.log('entered');
             const response = await fetch('/api/openai', {
                 method: 'POST',
                 body: JSON.stringify(conversation),
@@ -144,9 +168,11 @@ const Page = ({}: Props) => {
             storeLocalStorage(conversation);
             updateConversationsList(conversation);
             setChat(conversation);
-            setText('');
         }
         setSubmitting(false);
+        setTimeout(() => {
+            scrollTobottom();
+        }, 100);
     };
 
     const textAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -157,7 +183,7 @@ const Page = ({}: Props) => {
     return (
         <section className="mx-auto h-full max-w-full px-8 sm:max-w-[90%] sm:p-12  ">
             <div className="mb-10 h-[75vh] w-full overflow-y-auto">
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-5" ref={chatbox}>
                     {chat &&
                         chat?.messages?.map((message, index) => (
                             <div
@@ -199,7 +225,7 @@ const Page = ({}: Props) => {
                                 )}
 
                                 {message?.role === 'user' && (
-                                    <div className="absolute top-2 right-0 h-8 min-h-[2rem] w-8 min-w-[2rem]">
+                                    <div className="absolute right-0 top-2 h-8 min-h-[2rem] w-8 min-w-[2rem]">
                                         <Image
                                             src="/images/user-image.png"
                                             fill
@@ -233,7 +259,7 @@ const Page = ({}: Props) => {
             </div>
             <div className="relative bg-gray-900 ">
                 <textarea
-                    className="h-18 text-md w-[calc(100%-4rem)]  overflow-y-auto bg-transparent py-5 px-5 outline-none md:w-3/4"
+                    className="h-18 text-md w-[calc(100%-4rem)]  overflow-y-auto bg-transparent px-5 py-5 outline-none md:w-3/4"
                     rows={2}
                     placeholder="Type your message here..."
                     onChange={textAreaOnChange}
@@ -245,6 +271,7 @@ const Page = ({}: Props) => {
                             handleClick();
                         }
                     }}
+                    disabled={submitting}
                 />
 
                 <Button
