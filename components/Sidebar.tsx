@@ -15,7 +15,7 @@ const SideBar = ({}: Props) => {
         <>
             <aside
                 id="default-sidebar"
-                className={`fixed top-0 left-0 z-40 h-screen max-h-screen w-64  ${
+                className={`fixed left-0 top-0 z-40 h-screen max-h-screen w-64  ${
                     showMobileNav ? 'translate-x-0' : '-translate-x-full'
                 } overflow-y-auto transition-transform sm:translate-x-0`}
                 aria-label="Sidebar"
@@ -30,14 +30,6 @@ const SideBar = ({}: Props) => {
 
                     <nav>
                         <ul className="space-y-2">
-                            <li>
-                                <Link
-                                    href="/"
-                                    className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                >
-                                    Home
-                                </Link>
-                            </li>
                             <li>
                                 <button className="flex w-full items-center rounded-lg p-2 text-left text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                                     Settings
