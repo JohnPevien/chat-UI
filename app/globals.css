@@ -94,6 +94,7 @@ body {
 
 body {
     color: rgb(var(--foreground-rgb));
+    background-color: @apply bg-zinc-700;
 }
 
 a {

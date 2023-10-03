@@ -40,7 +40,7 @@ const SideBar = ({}: Props) => {
                 </div>
             </aside>
 
-            <div className="flex justify-end p-4 sm:hidden">
+            <div className="mb-10 flex justify-end bg-gray-800 p-4 sm:hidden">
                 <button
                     className=" cursor-pointer sm:hidden"
                     onClick={toggleMobileNav}
