@@ -16,7 +16,7 @@ export default function RootLayout({
         <html lang="en">
             <body>
                 <SideBar />
-                <main className="relative h-full max-h-screen overflow-hidden sm:ml-64">
+                <main className="relative h-full max-h-screen overflow-hidden bg-zinc-700 sm:ml-64 ">
                     {children}
                 </main>
             </body>

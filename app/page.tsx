@@ -181,8 +181,8 @@ const Page = ({}: Props) => {
     };
 
     return (
-        <section className="mx-auto h-full max-w-full px-8 sm:max-w-[90%] sm:p-12  ">
-            <div className="mb-10 h-[75vh] w-full overflow-y-auto">
+        <section className="mx-auto h-full max-h-screen max-w-full px-8 sm:max-w-[90%] sm:p-12  ">
+            <div className="relative mb-10 mt-5 h-[75vh] w-full overflow-y-auto md:mt-0">
                 <div className="flex flex-col gap-5" ref={chatbox}>
                     {chat &&
                         chat?.messages?.map((message, index) => (
@@ -257,7 +257,7 @@ const Page = ({}: Props) => {
                     )}
                 </div>
             </div>
-            <div className="relative bg-gray-900 ">
+            <div className="absolute bg-gray-900 ">
                 <textarea
                     className="h-18 text-md w-[calc(100%-4rem)]  overflow-y-auto bg-transparent px-5 py-5 outline-none md:w-3/4"
                     rows={2}
