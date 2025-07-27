@@ -1,4 +1,4 @@
-import SideBar from '@/components/Sidebar';
+import { SideBar } from '@/components';
 
 import './globals.css';
 

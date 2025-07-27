@@ -1,11 +1,10 @@
 'use client';
 
-import Conversations from '@/components/Conversations';
-import Link from 'next/link';
+import { Conversations } from './Conversations';
 import { useState } from 'react';
 
 type Props = {};
-const SideBar = ({}: Props) => {
+export const SideBar = ({}: Props) => {
     const [showMobileNav, setShowMobileNav] = useState(false);
 
     const toggleMobileNav = () => {
@@ -64,4 +63,4 @@ const SideBar = ({}: Props) => {
         </>
     );
 };
-export default SideBar;
+
