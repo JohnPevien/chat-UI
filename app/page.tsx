@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useChatStore } from '@/store';
 import { ToastContainer } from 'react-toastify';
-import { Loader2, Send } from 'lucide-react';
+import { ChatInput } from '@/components';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,29 +20,6 @@ interface Chat {
     messages: Message[];
     title: string;
 }
-
-const Button = ({
-    className,
-    onClick,
-    children,
-    disabled,
-}: {
-    onClick: () => void;
-    className: string;
-    children: React.ReactNode;
-    disabled?: boolean;
-}) => {
-    return (
-        <button
-            type="button"
-            className={className}
-            onClick={onClick}
-            disabled={disabled}
-        >
-            {children}
-        </button>
-    );
-};
 
 const storeLocalStorage = (chat: Chat) => {
     if (!localStorage.getItem(`chat-${chat.id}`)) {
@@ -259,36 +236,12 @@ const Page = ({}: Props) => {
                     )}
                 </div>
             </div>
-            <div className="absolute bg-gray-900 ">
-                <textarea
-                    className="h-18 text-md w-[calc(100%-4rem)]  overflow-y-auto bg-transparent px-5 py-5 outline-none md:w-3/4"
-                    rows={2}
-                    placeholder="Type your message here..."
-                    onChange={textAreaOnChange}
-                    style={{ resize: 'none' }}
-                    value={text}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            handleClick();
-                        }
-                    }}
-                    disabled={submitting}
-                />
-
-                <Button
-                    onClick={handleClick}
-                    className=" absolute right-6 top-1/2 inline-flex -translate-y-1/2 items-center gap-3 rounded bg-blue-600
-                    px-5 py-2"
-                    disabled={submitting}
-                >
-                    {submitting ? (
-                        <Loader2 className="h-5 w-5 animate-spin text-white" />
-                    ) : (
-                        <Send className="h-5 w-5 text-white" />
-                    )}
-                </Button>
-            </div>
+            <ChatInput
+                text={text}
+                submitting={submitting}
+                onTextChange={textAreaOnChange}
+                onSubmit={handleClick}
+            />
             <ToastContainer position="bottom-right" theme="dark" />
         </section>
     );
