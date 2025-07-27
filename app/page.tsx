@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useChatStore } from '@/store';
 import { ToastContainer } from 'react-toastify';
-import { ChatInput } from '@/components';
+import { ChatInput, ChatMessages } from '@/components';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -122,7 +122,7 @@ const Page = ({}: Props) => {
             const decoder = new TextDecoder();
             let done = false;
 
-            let text = '';
+            let responseText = '';
 
             setStreaming(true);
 
@@ -130,8 +130,8 @@ const Page = ({}: Props) => {
                 const { value, done: doneReading } = await reader.read();
                 done = doneReading;
                 const chunkValue = decoder.decode(value);
-                text += chunkValue;
-                setStreamReply(text);
+                responseText += chunkValue;
+                setStreamReply(responseText);
             }
 
             setStreaming(false);
@@ -140,7 +140,7 @@ const Page = ({}: Props) => {
                 ...conversation.messages,
                 {
                     role: 'assistant',
-                    content: text,
+                    content: responseText,
                 },
             ];
 
@@ -160,88 +160,29 @@ const Page = ({}: Props) => {
     };
 
     return (
-        <section className="mx-auto h-full max-h-screen max-w-full px-8 sm:max-w-[90%] sm:p-12  ">
-            <div className="relative mb-10 mt-5 h-[75vh] w-full overflow-y-auto md:mt-0">
-                <div className="flex flex-col gap-5" ref={chatbox}>
-                    {chat &&
-                        chat?.messages?.map((message, index) => (
-                            <div
-                                key={index}
-                                className={`relative flex flex-row items-center gap-2 whitespace-pre-wrap ${
-                                    message?.role === 'user'
-                                        ? 'justify-end'
-                                        : 'justify-start'
-                                }`}
-                            >
-                                {message?.role && (
-                                    <>
-                                        {message?.role !== 'user' && (
-                                            <div className="absolute left-0 top-2 z-10 h-8 w-8 rounded-full bg-gradient-to-r from-red-400 to-blue-500"></div>
-                                        )}
-                                    </>
-                                )}
-
-                                {message?.content && (
-                                    <div
-                                        className={`flex flex-col
-                                    ${
-                                        message?.role === 'user'
-                                            ? 'items-end'
-                                            : 'items-start'
-                                    }
-                                    `}
-                                    >
-                                        <div
-                                            className={` rounded-xl ${
-                                                message?.role === 'user'
-                                                    ? ' mr-10  bg-blue-600'
-                                                    : '  ml-10  bg-gray-600 '
-                                            } max-w-[85%] px-4 py-3`}
-                                        >
-                                            {message?.content}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {message?.role === 'user' && (
-                                    <div className="absolute right-0 top-2 h-8 min-h-[2rem] w-8 min-w-[2rem]">
-                                        <Image
-                                            src="/images/user-image.png"
-                                            fill
-                                            alt="User"
-                                            className="absolute left-0 top-0 z-10 rounded-full"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    {streaming && (
-                        <div
-                            className={`relative flex flex-row items-center justify-start gap-2 whitespace-pre-wrap`}
-                        >
-                            <div className="absolute left-0 top-2 z-10 h-8 w-8 rounded-full bg-gradient-to-r from-red-400 to-blue-500"></div>
-
-                            <div
-                                className={`flex flex-col
-                                    items-start
-                                    `}
-                            >
-                                <div
-                                    className={` ml-10 max-w-[85%]  rounded-xl bg-gray-600 px-4 py-3`}
-                                >
-                                    {streamReply}
-                                </div>
-                            </div>
-                        </div>
-                    )}
+        <section className="flex h-full max-h-screen flex-col px-4 sm:px-8 lg:px-12">
+            <div className="flex-1 overflow-y-auto py-6">
+                <div className="mx-auto max-w-4xl">
+                    <ChatMessages
+                        ref={chatbox}
+                        chat={chat}
+                        streaming={streaming}
+                        streamReply={streamReply}
+                    />
                 </div>
             </div>
-            <ChatInput
-                text={text}
-                submitting={submitting}
-                onTextChange={textAreaOnChange}
-                onSubmit={handleClick}
-            />
+            
+            <div className="border-t border-gray-700 px-4 py-4">
+                <div className="mx-auto max-w-4xl">
+                    <ChatInput
+                        text={text}
+                        submitting={submitting}
+                        onTextChange={textAreaOnChange}
+                        onSubmit={handleClick}
+                    />
+                </div>
+            </div>
+
             <ToastContainer position="bottom-right" theme="dark" />
         </section>
     );

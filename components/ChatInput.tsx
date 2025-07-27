@@ -1,5 +1,3 @@
-'use client';
-
 import { Loader2, Send } from 'lucide-react';
 
 interface ChatInputProps {
@@ -32,7 +30,7 @@ const Button = ({
     );
 };
 
-const ChatInput = ({ text, submitting, onTextChange, onSubmit }: ChatInputProps) => {
+export const ChatInput = ({ text, submitting, onTextChange, onSubmit }: ChatInputProps) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -41,13 +39,12 @@ const ChatInput = ({ text, submitting, onTextChange, onSubmit }: ChatInputProps)
     };
 
     return (
-        <div className="absolute bg-gray-900">
+        <div className="relative flex w-full items-center gap-3 rounded-lg bg-gray-900 p-3">
             <textarea
-                className="h-18 text-md w-[calc(100%-4rem)] overflow-y-auto bg-transparent px-5 py-5 outline-none md:w-3/4"
+                className="flex-1 resize-none bg-transparent text-white placeholder-gray-400 outline-none"
                 rows={2}
                 placeholder="Type your message here..."
                 onChange={onTextChange}
-                style={{ resize: 'none' }}
                 value={text}
                 onKeyDown={handleKeyDown}
                 disabled={submitting}
@@ -55,7 +52,7 @@ const ChatInput = ({ text, submitting, onTextChange, onSubmit }: ChatInputProps)
 
             <Button
                 onClick={onSubmit}
-                className="absolute right-6 top-1/2 inline-flex -translate-y-1/2 items-center gap-3 rounded bg-blue-600 px-5 py-2"
+                className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded bg-blue-600 px-4 py-2 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={submitting}
             >
                 {submitting ? (
@@ -68,4 +65,4 @@ const ChatInput = ({ text, submitting, onTextChange, onSubmit }: ChatInputProps)
     );
 };
 
-export default ChatInput;
+ChatInput.displayName = 'ChatInput';
