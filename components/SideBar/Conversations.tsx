@@ -1,3 +1,4 @@
+
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useChatStore } from '@/store';
 
@@ -6,7 +7,7 @@ type Props = {
     setShowMobileNav: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Conversations({ setShowMobileNav }: Props) {
+export const Conversations = ({ setShowMobileNav }: Props) => {
     const { setChat, chats, setChats } = useChatStore();
 
     const [confirmClear, setConfirmClear] = useState(false);
