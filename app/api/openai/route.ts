@@ -20,13 +20,13 @@ export async function POST(req: Request): Promise<Response> {
     }
 
     const payload: OpenAIStreamPayload = {
-        model: 'gpt-3.5-turbo',
+        model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
         messages: body.messages,
         temperature: 0.7,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
-        max_tokens: 500,
+        max_tokens: 2000,
         stream: true,
         n: 1,
     };
