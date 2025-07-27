@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 type Props = {};
 
 interface Message {
-    role: string;
+    role: 'user' | 'assistant' | 'system';
     content: string;
 }
 
@@ -99,9 +99,10 @@ const Page = ({}: Props) => {
     }, [streaming]);
 
     const handleClick = async () => {
+        const chatId = chat?.id || `chat-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
         const conversation: Chat = {
-            id: chat?.id || '',
-            title: chat?.title || '',
+            id: chatId,
+            title: chat?.title || 'New Chat',
             messages: [],
         };
 
@@ -160,7 +161,7 @@ const Page = ({}: Props) => {
             conversation.messages = [
                 ...conversation.messages,
                 {
-                    role: 'system',
+                    role: 'assistant',
                     content: text,
                 },
             ];

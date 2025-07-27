@@ -4,7 +4,7 @@ import {
     ReconnectInterval,
 } from 'eventsource-parser';
 
-export type ChatGPTAgent = 'user' | 'system';
+export type ChatGPTAgent = 'user' | 'assistant' | 'system';
 
 export interface ChatGPTMessage {
     role: ChatGPTAgent;
