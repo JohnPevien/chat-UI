@@ -21,10 +21,33 @@ interface Chat {
     title: string;
 }
 
-const storeLocalStorage = (chat: Chat) => {
+// OPTIMIZE: move to utils
+const generateChatTitle = async (chat: Chat): Promise<string> => {
+    try {
+        const response = await fetch('/api/generate-title', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ messages: chat.messages }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to generate title');
+        }
+
+        const data = await response.json();
+        return data.title || 'New Chat';
+    } catch (error) {
+        console.error('Error generating chat title:', error);
+        return 'New Chat';
+    }
+};
+
+const storeLocalStorage = async (chat: Chat) => {
     if (!localStorage.getItem(`chat-${chat.id}`)) {
-        const chatTitle = prompt('Enter a title for this chat');
-        chat.title = chatTitle || 'No Title';
+        const chatTitle = await generateChatTitle(chat);
+        chat.title = chatTitle;
     }
 
     localStorage.setItem(`chat-${chat.id}`, JSON.stringify(chat));
@@ -144,7 +167,7 @@ const Page = ({}: Props) => {
                 },
             ];
 
-            storeLocalStorage(conversation);
+            await storeLocalStorage(conversation);
             updateConversationsList(conversation);
             setChat(conversation);
         }
